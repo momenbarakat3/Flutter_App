@@ -3,7 +3,7 @@ import 'ThirdPage.dart';
 import'data.dart';
 import'package:flutter_app/models.dart';
 import 'FormScreen.dart';
-class SecondPage extends StatefulWidget {
+class SecondScreen extends StatefulWidget {
   @override
   _listState createState() => _listState();
   static BuildContext context;
@@ -11,11 +11,11 @@ class SecondPage extends StatefulWidget {
 
 }
 
-class _listState extends State<SecondPage> {
-  List<Location> locations = SecondPage.locations;
+class _listState extends State<SecondScreen> {
+  List<Location> locations = SecondScreen.locations;
   @override
   Widget build(BuildContext context) {
-    SecondPage.context=context;
+    SecondScreen.context=context;
     return Scaffold(
         appBar: AppBar(
           title: Text('Favourite Locations',
@@ -53,15 +53,14 @@ class _listState extends State<SecondPage> {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => FormScreen()));
         },
-          child: Text('+'),
-          backgroundColor: Colors.cyan[500],
+          child: Text('+',),backgroundColor: Colors.cyan[500],
         )
     );
   }
 
 
   void navigateToDescription(Location location6){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> ThirdPage(location6)));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> ThirdScreen(location6)));
   }
 
 }
