@@ -18,7 +18,7 @@ class _listState extends State<SecondPage> {
     SecondPage.context=context;
     return Scaffold(
         appBar: AppBar(
-          title: Text('Favourtie Locations',
+          title: Text('Favourite Locations',
             style: TextStyle(color: Colors.white),
           ) ,
           centerTitle: true ,
