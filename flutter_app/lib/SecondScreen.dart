@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'ThirdPage.dart';
-import'data.dart';
-import'package:flutter_app/models.dart';
+import 'ThirdScreen.dart';
+import'Data.dart';
+import'Models.dart';
+import'package:flutter_app/Models.dart';
 import 'FormScreen.dart';
 class SecondScreen extends StatefulWidget {
   @override
