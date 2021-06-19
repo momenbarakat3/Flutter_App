@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import "SecondScreen.dart";
-import 'Models.dart';
-
+import 'models.dart';
 
 class FormScreen extends StatefulWidget {
   @override
@@ -31,8 +31,22 @@ class FormScreenState extends State<FormScreen> {
 
         return null;
       },
-      onChanged: (value) => _locationname= value,
+      onChanged: (value) => _locationname = value,
     );
+  }
+
+  addData(String name, String theme, String description, String locationUrl,
+      String imageUrl) {
+    Map<String, dynamic> data = {
+      "name": name,
+      "theme": theme,
+      "description": description,
+      "locationUrl": locationUrl,
+      "imageUrl": imageUrl
+    };
+    CollectionReference collectionReference =
+    FirebaseFirestore.instance.collection('data');
+    collectionReference.add(data);
   }
 
   Widget _buildTheme() {
@@ -44,8 +58,7 @@ class FormScreenState extends State<FormScreen> {
         }
         return null;
       },
-      onChanged: (value) => _theme= value,
-
+      onChanged: (value) => _theme = value,
     );
   }
 
@@ -59,7 +72,7 @@ class FormScreenState extends State<FormScreen> {
 
         return null;
       },
-      onChanged: (value) => _fulldescription= value,
+      onChanged: (value) => _fulldescription = value,
     );
   }
 
@@ -89,16 +102,14 @@ class FormScreenState extends State<FormScreen> {
 
         return null;
       },
-      onChanged: (value) => _imageurl  = value,
+      onChanged: (value) => _imageurl = value,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor:Colors.cyan[500],
-        title: Text("Form"),centerTitle: true,),
+      appBar: AppBar(title: Text("Form"),backgroundColor: Colors.cyan[500],centerTitle: true,),
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.all(24),
@@ -113,28 +124,20 @@ class FormScreenState extends State<FormScreen> {
                 _builLocationURL(),
                 _buildImageURL(),
                 SizedBox(height: 100),
-                RaisedButton(
-                  child: Text(
-                    'Submit',
-                    style: TextStyle(color: Colors.cyan[500], fontSize: 15),
-                  ),
+                ElevatedButton(
+                  child: Text('Submit'),
+                    style: ElevatedButton.styleFrom(primary: Colors.cyan[500],onPrimary: Colors.white),
                   onPressed: () {
-
                     if (!_formKey.currentState.validate()) {
                       return;
-                    }
-                    else {
-                      location = new Location(id: 6,
-                          name: _locationname,
-                          theme: _theme,
-                          description: _fulldescription,
-                          imageUrl: _imageurl,
-                          locationUrl: _locationurl);
-                      SecondScreen.locations.add(location);
-                      _formKey.currentState.save();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SecondScreen()));
+                    } else {
+                      addData(_locationname, _theme, _fulldescription,
+                          _locationurl, _imageurl);
 
-                      //Send to API
+                      _formKey.currentState.save();
+
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => SecondScreen()));
                     }
                   },
                 )
@@ -144,9 +147,5 @@ class FormScreenState extends State<FormScreen> {
         ),
       ),
     );
-
   }
-
-
-
 }

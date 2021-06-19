@@ -1,19 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'ThirdScreen.dart';
-import'Data.dart';
-import'Models.dart';
-import'package:flutter_app/Models.dart';
 import 'FormScreen.dart';
+
 class SecondScreen extends StatefulWidget {
   @override
   _listState createState() => _listState();
   static BuildContext context;
-  static List<Location> locations=(new locationsAll()).listobj;
+  //static List<Location> locations=(new locationsAll()).listobj;
 
 }
 
 class _listState extends State<SecondScreen> {
-  List<Location> locations = SecondScreen.locations;
+  //List<Location> locations = SecondScreen.locations;
   @override
   Widget build(BuildContext context) {
     SecondScreen.context=context;
@@ -25,43 +24,48 @@ class _listState extends State<SecondScreen> {
           centerTitle: true ,
           backgroundColor: Colors.cyan[500] ,
         ),
-        body: ListView.builder(
-          itemCount: locations.length,
-          itemBuilder: (context,index){
-
-            return Container(
-                child: Card(
-                  child: Wrap(
-                    children: [
-                      Image.network(locations[index].imageUrl),
-                      ListTile(
-                          tileColor: Colors.cyan[50],
-
-                          onTap:  (){
-                            navigateToDescription(locations[index]);
-                          },
-                          title:   Text(locations[index].name),
-                          subtitle : Text(locations[index].theme)
-                      )
-                    ],
-                  ),
-                )
+        body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('data').snapshots(),
+          builder: (context, snapshot) {
+            return ListView.builder(
+              itemCount:snapshot.data.docs.length ,
+              itemBuilder: (context, index) {
+                return Container(
+                    child: Card(
+                      child: Wrap(
+                        children: [
+                          Image.network(snapshot.data.docs[index]['imageUrl']),
+                          ListTile(
+                            tileColor: Colors.cyan[50],
+                                onTap: () {
+                                navigateToDescription(index);
+                                },
+                            title: Text(snapshot.data.docs[index]['name']),
+                                subtitle: Text(snapshot.data.docs[index]['theme']))
+                        ],
+                      ),
+                    ));
+              },
             );
-          },
-        ),
+          }),
 
-        floatingActionButton:FloatingActionButton(  onPressed: () {
+        floatingActionButton:FloatingActionButton(
+            backgroundColor: Colors.cyan[500],
+            foregroundColor: Colors.white,
+            onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => FormScreen()));
         },
-          child: Text('+',),backgroundColor: Colors.cyan[500],
+           // child: Text('+',),backgroundColor: Colors.cyan[500],
+         child: Icon(Icons.add)
+
         )
     );
   }
 
 
-  void navigateToDescription(Location location6){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> ThirdScreen(location6)));
+  void navigateToDescription(int i){
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> ThirdScreen(i)));
   }
 
 }

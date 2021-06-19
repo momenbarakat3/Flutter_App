@@ -1,17 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import'Models.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ThirdScreen extends StatefulWidget {
   @override
-  Location location5 ;
-  ThirdScreen(this.location5) ;
-  _pageState createState() => _pageState(this.location5);
+  int index;
+  ThirdScreen(this.index) ;
+  _pageState createState() => _pageState(this.index);
 }
 class _pageState extends State<ThirdScreen> {
-  Location location5 ;
-  _pageState(this.location5) ;
+  int index;
+  _pageState(this.index) ;
 
   //get onPressed => null;
   @override
@@ -25,25 +25,31 @@ class _pageState extends State<ThirdScreen> {
               ),centerTitle: true,
           ),
           body:
-          Column(
-            children: <Widget>[
-              Container(
-                  child:
-                  Text(location5.name)
-              ),
-              Container(
-                  child:
-                  Image.network(location5.imageUrl)
-              ),
-              Container(
-                  child:
-                  Text(location5.description)
-              )
-            ],
-          ),
-          floatingActionButton:FloatingActionButton( onPressed : () {launch(location5.locationUrl);},
-              child: Text('Click'),backgroundColor: Colors.cyan[500],)
-      ),
-    );
-  }
-}
+              StreamBuilder(
+              stream: FirebaseFirestore.instance.collection('data').snapshots(),
+               builder: (context, snapshot) {
+                return Column(
+                children: <Widget>[
+                  Container(
+                      child: Text(snapshot.data.docs[index]['name'])),
+                  Container(
+                      child:
+                    Image.network(snapshot.data.docs[index]['imageUrl'])),
+                  Container(
+                      child: Text(snapshot.data.docs[index]['description'])),
+                  FloatingActionButton(
+                 backgroundColor: Colors.cyan[500],
+                      foregroundColor: Colors.white,
+                      onPressed: () {
+                        launch(snapshot.data.docs[index]['locationUrl']);
+                          },
+                      child: Icon(Icons.map)
+                         )
+                      ],
+                    );
+                  }
+               ),
+            ),
+          );
+      }
+    }
